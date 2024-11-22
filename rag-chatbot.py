@@ -1,51 +1,51 @@
-import getpass
 import os
-from langchain_openai import ChatOpenAI
-from langchain.chains import create_retrieval_chain
+from dotenv import load_dotenv
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_community.document_loaders import DirectoryLoader
+from langchain_cohere import ChatCohere, CohereEmbeddings
+from langchain_community.vectorstores import Chroma
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.vectorstores import InMemoryVectorStore
-from langchain_openai import OpenAIEmbeddings
-from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain.chains import create_retrieval_chain
 
-if not os.environ.get("OPENAI_API_KEY"):
-    os.environ["OPENAI_API_KEY"] = getpass.getpass()
-    
-llm = ChatOpenAI()
+load_dotenv()
 
-# 1. Load, chunk and index the contents
+COHERE_API_KEY = os.getenv("COHERE_API_KEY")
+
+# Load data
 loader = DirectoryLoader("data/")
-
 docs = loader.load()
-
-text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
-splits = text_splitter.split_documents(docs)
-vectorstore = InMemoryVectorStore.from_documents(
-    documents=splits, embedding=OpenAIEmbeddings()
+# Split text into chunks
+text_splitter = RecursiveCharacterTextSplitter()
+documents = text_splitter.split_documents(docs)
+# Define the embedding model
+embeddings = CohereEmbeddings(
+    cohere_api_key=COHERE_API_KEY, model="embed-multilingual-v3.0"
 )
-retriever = vectorstore.as_retriever()
+# Create the vector store
+vector = Chroma.from_documents(documents, embeddings)
+# Define a retriever interface
+retriever = vector.as_retriever()
+# Define LLM
+llm = ChatCohere(cohere_api_key=COHERE_API_KEY, model="command-r-plus-08-2024")
+# Define prompt template
+prompt = ChatPromptTemplate.from_template(
+    """Answer the following question based only on the provided context:
 
-# 2. Incorporate the retriever into a question-answering chain.
-system_prompt = (
-    "You are an assistant for question-answering tasks. "
-    "Use the following pieces of retrieved context to answer "
-    "the question. If you don't know the answer, say that you "
-    "don't know. Use three sentences maximum and keep the "
-    "answer concise."
-    "\n\n"
-    "{context}"
-)
+<context>
+{context}
+</context>
 
-prompt = ChatPromptTemplate.from_messages(
-    [
-        ("system", system_prompt),
-        ("human", "{input}"),
-    ]
+Question: {input}"""
 )
 
-question_answer_chain = create_stuff_documents_chain(llm, prompt)
-rag_chain = create_retrieval_chain(retriever, question_answer_chain)
-
-response = rag_chain.invoke({"input": "What is Task Decomposition?"})
-response["answer"]
+# Create a retrieval chain to answer questions
+document_chain = create_stuff_documents_chain(llm, prompt)
+retrieval_chain = create_retrieval_chain(retriever, document_chain)
+response = retrieval_chain.invoke(
+    {
+        "input": "Quels sont les services offerts par la direction du trésor? Donne-moi toutes les informations dont j'ai besoin y compris les pièces ou formalités à remplir."
+    }
+)
+print(response["answer"])

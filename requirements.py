@@ -1,5 +1,7 @@
 fastapi[all]
 langchain
 langchain-community
-langchain-openai
+langchain-cohere
+cohere
+chromadb
 unstructured[all-docs]
