@@ -4,3 +4,9 @@ venv/
 
 # Compiled files
 __pycache__/
+
+# Environment variables
+.env
+
+# Data source folder
+data/
