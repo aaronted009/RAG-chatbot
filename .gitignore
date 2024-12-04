@@ -1,4 +1,5 @@
 # Virtual environment
+venv
 backend/venv/
 backend/.venv/
 
@@ -6,9 +7,11 @@ backend/.venv/
 backend/__pycache__/
 
 # Environment variables
+.env
 backend/.env
 
 # Data source folder
+data
 backend/data/
 
 
