@@ -43,9 +43,3 @@ Question: {input}"""
 # Create a retrieval chain to answer questions
 document_chain = create_stuff_documents_chain(llm, prompt)
 retrieval_chain = create_retrieval_chain(retriever, document_chain)
-response = retrieval_chain.invoke(
-    {
-        "input": "Quels sont les services offerts par la direction du trésor? Donne-moi toutes les informations dont j'ai besoin y compris les pièces ou formalités à remplir."
-    }
-)
-print(response["answer"])
