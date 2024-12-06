@@ -31,7 +31,11 @@ retriever = vector.as_retriever()
 llm = ChatCohere(cohere_api_key=COHERE_API_KEY, model="command-r-plus-08-2024")
 # Define prompt template
 prompt = ChatPromptTemplate.from_template(
-    """Answer the following question based only on the provided context:
+    """Answer the question based only on the provided context. 
+    In this context, know that "Direction Générale du Trésor Public" and "Direction du Trésor Public" and "Trésor Public" 
+    can be used to designate the same entity. When answering you don't necessarily need to say that you're answering 
+    based on the context. Of course, you'll answer based only on the context but you don't need to say it each time when answering.
+    In case the information is not in the context provided, answer that you don't have the information and give contacts of DGTCP.
 
 <context>
 {context}
