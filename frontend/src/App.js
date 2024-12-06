@@ -3,13 +3,13 @@ import logo_DGTCP from "./assets/logo_DGTCP.png";
 import DGTCP_BOT_LOGO from "./assets/logo_DGTCP.png";
 //import addBtn from "./assets/add-30.png";
 import msgIcon from "./assets/message.svg";
- 
-import React,{ useEffect, useRef,useState } from "react";
+
+import React, { useEffect, useRef, useState } from "react";
 import { sendMessageToOpenAI } from "./bot.js";
 
 //import { sendMessageToOpenAI } from "./liamaBot.js";
 
-import LoginForm from './login.js';
+import LoginForm from "./login.js";
 import userLogo from "./assets/user-icon.png";
 //import userIcon from  './assets/user.svg';
 //import home from "./assets/home.svg";
@@ -19,31 +19,29 @@ import userLogo from "./assets/user-icon.png";
 import sendBtn from "./assets/send.svg";
 
 function App() {
- 
-    const reloadPage = () => {
-      window.location.reload();
-    };
+  const reloadPage = () => {
+    window.location.reload();
+  };
 
-   
-  
-  
   const msgEnd = useRef(null);
 
   const [input, setInput] = useState("");
-  
+
   const [messages, setMessages] = useState([
     {
-      text: ["Bonjour, je suis le robot conversationel de la DGTCP.",
-              "Comment puis-je vous aidez s'il vous plaît ?"], // Changed "test" to "text" for consistency
+      text: [
+        "Bonjour, je suis le robot conversationel de la DGTCP.",
+        "Comment puis-je vous aidez s'il vous plaît ?",
+      ], // Changed "test" to "text" for consistency
       isBot: true,
     },
   ]);
 
-  useEffect(()=>{
+  useEffect(() => {
     msgEnd.current.scrollIntoView();
   }, [messages]);
 
-/* 
+  /* 
   const handleQuery = async (e) =>{
     const buttonValue = e.target.dataset.value;
     const userMessage = { text: buttonValue, isBot: false };
@@ -76,17 +74,15 @@ function App() {
   };
  */
 
-
-
   const sendMessage = async (text, isUserInput = true) => {
     const userMessage = { text, isBot: false };
-  
+
     setMessages((prevMessages) => [...prevMessages, userMessage]);
-  
+
     if (isUserInput) {
       setInput(""); // Clear input field
     }
-  
+
     try {
       const res = await sendMessageToOpenAI(text);
       const botMessage = { text: res, isBot: true };
@@ -99,14 +95,11 @@ function App() {
     const buttonValue = e.target.dataset.value;
     await sendMessage(buttonValue, false);
   };
-  
+
   const handleSend = async () => {
     if (!input.trim()) return; // Prevent sending empty messages
     await sendMessage(input);
   };
-    
-
-
 
   const handleEnter = async (e) => {
     if (e.key === "Enter") {
@@ -115,12 +108,11 @@ function App() {
   };
 
   /*console.log("APPKEY" + process.env.NODE_ENV);*/
-  const [isActive , setisActive] = useState(false);
+  const [isActive, setisActive] = useState(false);
 
   const handleLoginFormOpen = () => {
     setisActive(!isActive);
   };
-
 
   return (
     <div className="App">
@@ -130,7 +122,7 @@ function App() {
             <div className="brand">
               <div className="brandid">
                 <img src={logo_DGTCP} alt="DGTC" className="logo" />
-                <span>Direction Général du Trésor Public</span>
+                <span>Direction Générale du Trésor Public</span>
               </div>
               {/* <button className="midBtn">
                 <img src={addBtn} alt="Nouvelle discussion" /> Nouvelle
@@ -138,14 +130,45 @@ function App() {
               </button> */}
             </div>
           </div>
-
           <div className="upperSideBottom">
-            <button className="query" data-value="C'est quoi le
-              Trésor Public ?" onClick={handleQuery}>
-              <img src={msgIcon} alt="Question par défaut"  /> C'est quoi le
-              Trésor Public ?
+            <button
+              className="query"
+              data-value="C'est quoi la Direction Générale du Trésor Public ?"
+              onClick={handleQuery}
+            >
+              <img src={msgIcon} alt="C'est quoi la Direction Générale du Trésor Public ?" />
+              C'est quoi la Direction Générale du Trésor Public ?
             </button>
-            <button className="query" data-value="Autre question par défaut" onClick={handleQuery}>
+
+            <button
+              className="query"
+              data-value="Quels sont les services offerts par la DGTCP ?"
+              onClick={handleQuery}
+            >
+              <img
+                src={msgIcon}
+                alt="Quels sont les services offerts par la DGTCP ?"
+              />{" "}
+              Quels sont les services offerts par la DGTCP ?
+            </button>
+
+            <button
+              className="query"
+              data-value="Quelles sont les pièces à fournir pour une demande de transfert ?"
+              onClick={handleQuery}
+            >
+              <img
+                src={msgIcon}
+                alt="Quelles sont les pièces à fournir pour une demande de transfert ?"
+              />
+              Quelles sont les pièces à fournir pour une demande de transfert ?
+            </button>
+
+            <button
+              className="query"
+              data-value="Autre question par défaut"
+              onClick={handleQuery}
+            >
               <img src={msgIcon} alt="Question par défaut" /> Autre question par
               défaut
             </button>
@@ -153,10 +176,10 @@ function App() {
         </div>
         <div className="lowwerSide">
           <div className="listItems">
-          <a alt="Accueil" onClick={reloadPage}>
-            {/* <img alt="Accueil" src={home} className="listItemsImg" /> */}
-            <i className="fi fi-rr-home"></i> {" "}
-             Accueil </a>
+            <a alt="Accueil" onClick={reloadPage}>
+              {/* <img alt="Accueil" src={home} className="listItemsImg" /> */}
+              <i className="fi fi-rr-home"></i> Accueil{" "}
+            </a>
           </div>
           {/*  <div className="listItems">
             <img alt="Enregistrer" src={save} className="listItemsImg" /> 
@@ -164,22 +187,37 @@ function App() {
             <span>Enregistrer</span>
           </div>*/}
           <div className="listItems">
-          <a onClick={handleLoginFormOpen}> 
-            {/*  <img alt="Connexion" src={rocket} className="listItemsImg" /> */}
-            <i className="fi fi-rr-user"></i> {" "}
-            Connexion</a>
+            <a onClick={handleLoginFormOpen}>
+              {/*  <img alt="Connexion" src={rocket} className="listItemsImg" /> */}
+              <i className="fi fi-rr-user"></i> Connexion
+            </a>
           </div>
 
-          <div id="connexionForm"   className= { isActive ? "connexionForm show" : "hidden"}>
-          <LoginForm />
+          <div className="listItems">
+            <a>
+              {/*  <img alt="Connexion" src={rocket} className="listItemsImg" /> */}
+              <i className="fi fi-rr-rocket"></i> Contact
+            </a>
           </div>
 
+          <div className="listItems">
+            <a>
+              {/*  <img alt="Connexion" src={rocket} className="listItemsImg" /> */}
+              <i className="fi fi-rr-link"></i> Liens utiles
+            </a>
+          </div>
+
+          <div
+            id="connexionForm"
+            className={isActive ? "connexionForm show" : "hidden"}
+          >
+            <LoginForm />
+          </div>
         </div>
       </div>
       <div className="main">
         <div className="chats">
-         
-{/* 
+          {/* 
           <div className="chat user-query">
             <img className="chatImg" alt="Vous" src={userLogo} />
             <p className="txt">
@@ -266,7 +304,7 @@ function App() {
             </div>
           ))}
 
-       <div ref={msgEnd}/>
+          <div ref={msgEnd} />
         </div>
 
         <div className="chatsFooter">
@@ -275,7 +313,7 @@ function App() {
               type="text"
               placeholder="Tapez votre question ici."
               value={input}
-              onKeyDown={handleEnter} 
+              onKeyDown={handleEnter}
               onChange={(e) => {
                 setInput(e.target.value);
               }}
@@ -287,7 +325,6 @@ function App() {
               <img alt="Envoyer" src={sendBtn} />
             </button>
           </div>
-
           <p className="small-note">
             Cet assistant peut faire des erreurs, vous pouvez confirmer les
             informations via notre centre d'appel au (229) 21301937 / 21308542.
