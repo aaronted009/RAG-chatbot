@@ -136,7 +136,10 @@ function App() {
               data-value="C'est quoi la Direction Générale du Trésor Public ?"
               onClick={handleQuery}
             >
-              <img src={msgIcon} alt="C'est quoi la Direction Générale du Trésor Public ?" />
+              <img
+                src={msgIcon}
+                alt="C'est quoi la Direction Générale du Trésor Public ?"
+              />
               C'est quoi la Direction Générale du Trésor Public ?
             </button>
 
@@ -227,17 +230,15 @@ function App() {
               culpa labore ipsum adipisicing fugiat nisi. Aliqua est sunt
               cupidatat commodo magna id. Cillum magna amet in labore laboris
               labore nulla esse mollit nulla aute labore aliqua.
-            </p>
-          </div>
-
+        </div>message.text
           <div className="chat bot">
             <img className="chatImg" alt="DGTP Bot" src={DGTCP_BOT_LOGO} />
             <p className="txt">
               Mollit mollit pariatur ea ad ex eiusmod qui nostrud nulla quis
-              aute esse. Exercitation aliquip magna magna et laboris magna ipsum
+            aute esse. Exercitation aliquip magna magna et laboris magna ipsum
               ut amet. Do irure elit commodo sint. Nostrud labore quis aute
-              culpa labore ipsum adipisicing fugiat nisi. Aliqua est sunt
-              cupidatat commodo magna id. Cillum magna amet in labore laboris
+            culpa labore ipsum adipisicing fugiat nisi. Aliqua est sunt
+            cupidatat commodo m
               labore nulla esse mollit nulla aute labore aliqua.
             </p>
           </div>
@@ -300,7 +301,12 @@ function App() {
                 alt={message.isBot ? "DGTP Bot" : "Vous"}
                 src={message.isBot ? DGTCP_BOT_LOGO : userLogo}
               />
-              <p className="txt">{message.text}</p>
+              <p className="txt">
+                {typeof message.text === "string" &&
+                  message.text
+                    .split("\n")
+                    .map((line, index) => <p key={index}>{line}</p>)}
+              </p>
             </div>
           ))}
 
