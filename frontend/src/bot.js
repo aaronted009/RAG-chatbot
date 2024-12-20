@@ -1,35 +1,30 @@
 import OpenAIApi from "openai";
 
 const openai = new OpenAIApi({
-  apiKey: process.env.REACT_APP_OPENAI_API_KEY,
-  dangerouslyAllowBrowser: true,
+    apiKey: process.env.REACT_APP_OPENAI_API_KEY,
+    dangerouslyAllowBrowser:true,
 });
 
-export async function sendMessageToOpenAI(message) {
-  const url = "http://127.0.0.1:8000/ask-bot";
 
-  try {
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        message: message,
-      }),
+
+export async function sendMessageToOpenAI(message){
+
+/* 
+     const res = await openai.chat.completions.create({
+        messages: [
+            {
+                role: "user",
+                content: message,
+            }
+        ],
+        model: "gpt-3.5-turbo", // Use GPT-3.5 Turbo for free access
+        temperature: 0.7,       // Uncommented for meaningful configuration
+        max_tokens: 256,
+        top_p: 1,
+        frequency_penalty: 0,
+        presence_penalty: 0,
     });
-
-    // If the response is not 2xx, throw an error
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-
-    // If the response is 200 OK, return the response in JSON format.
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Fetch error:", error);
-    return "Désolé, nous rencontrons un ennui momentané. Veuillez réessayer.";
-  }
+ */
+ 
+    return "Simulation ..."; //res.data.choices[0].text;
 }
